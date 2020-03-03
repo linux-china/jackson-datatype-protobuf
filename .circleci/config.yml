@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    
+    working_directory: ~/jackson-datatype-protobuf
+
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: jackson-datatype-protobuf-{{ checksum "pom.xml" }}
+      
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: jackson-datatype-protobuf-{{ checksum "pom.xml" }}
+      
+      - run: mvn verify # run the actual tests
+      
+      - store_test_results:
+          path: target/surefire-reports
